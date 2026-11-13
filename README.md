@@ -73,13 +73,40 @@ Post body here...
     A nested reply.
 ```
 
+## Limitations
+
+### Rate limits
+
+The extension makes the same requests the site would make if you clicked every "load more" yourself, just much faster. A small post needs 1 to 5 requests. A huge thread or a video with thousands of comments can need hundreds.
+
+- **Reddit may rate-limit you.** Reddit doesn't publish a limit for logged-in browsing, and big threads send many requests in a row, up to 400 per post. If you copy several very large threads back to back, Reddit may start answering with `429 Too Many Requests` for a while. That can also affect your normal browsing on Reddit until it resets.
+- **Prepare in background adds to this.** With it on, every post or video you open is fetched in full, even if you never copy it. If you browse many large threads, or Reddit starts refusing requests, turn it off in the **⋯** menu.
+- **YouTube** is more tolerant, but a video with tens of thousands of comments still takes hundreds of requests to its comments API.
+- **There is no retry or back-off yet.** On Reddit, a failed request (including a 429) is skipped, so those comments are silently missing from the output. On YouTube, a failed comments request stops the run with an error.
+- **The output may be incomplete.** If Reddit's 400-request cap is reached, or you stop a run early, the output says so in a note at the top of the comments.
+
+### Data
+
+- **Only what you can see.** The extension uses your own session, so private, quarantined, age-gated or members-only content is included only if your account can open it. Deleted and removed comments appear as `[deleted]` or `[removed]`, the way Reddit returns them.
+- **YouTube numbers are often rounded.** Comment likes and some video likes come as YouTube displays them (for example `1.2K`). Comment dates are relative (`2 weeks ago`), not exact timestamps.
+- **YouTube comments use the Top sort** (YouTube's default), not Newest.
+- **Reddit dates are in UTC.**
+- **Images are links, not files.** Images are included as Markdown image links to Reddit's or YouTube's servers. They may stop loading if the original is deleted.
+
+### Stability
+
+- **Unofficial endpoints.** Both sites' internal endpoints and page data are undocumented and can change without notice. If a site changes them, copying may fail or miss fields until the extension is updated.
+- **Clipboard timing.** If you click **Copy Markdown** and the fetch takes a long time, Chrome may refuse the clipboard write. The button then says "Ready — click again to copy", and one more click copies it. **Download .md** isn't affected.
+- **Chromium only.** The extension is built for Chrome and Chromium-based browsers. It has not been tested in Firefox or Safari.
+- **Supported pages:** Reddit post pages (`/r/<sub>/comments/<id>/…`) and YouTube watch pages (`/watch?v=…`). Shorts, live chat, community posts, and subreddit or channel listings aren't supported.
+
 ## Privacy
 
 - **No external calls.** The extension uses the same endpoints the sites already use, sent from your own tab:
   - Reddit: `/comments/<id>.json` and `/api/morechildren.json`
   - YouTube: the watch page's embedded data and `/youtubei/v1/next` for comment pages
 - **No data collection.** Nothing leaves your browser. The output goes to your clipboard or a file you choose to download.
-- **Permissions:** `clipboardWrite` to copy, and `storage` to remember your two toggles.
+- **Permissions:** `clipboardWrite` to copy, and `storage` to remember your toggles.
 
 ## Project structure
 
