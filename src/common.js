@@ -43,7 +43,7 @@
 
   // ---------- options ----------
 
-  MDC.DEFAULT_OPTIONS = { comments: true, images: true, prepare: false };
+  MDC.DEFAULT_OPTIONS = { comments: true, topLevelOnly: false, images: true, prepare: false };
 
   MDC.loadOptions = async () => {
     try {
@@ -167,6 +167,8 @@
       <div class="wrap">
         <div class="panel" role="menu">
           <label><input type="checkbox" name="comments" /> Include comments</label>
+          <label><input type="checkbox" name="topLevelOnly" />
+            <span>Top-level comments only<small>Skip replies and nested replies. Fewer requests on big threads.</small></span></label>
           <label><input type="checkbox" name="images" /> Include images</label>
           <label><input type="checkbox" name="prepare" />
             <span>Prepare in background<small>Fetch everything when the page loads, so Copy and Download are instant.</small></span></label>
@@ -191,7 +193,7 @@
 
     // ---- options ----
     let options = { ...MDC.DEFAULT_OPTIONS };
-    const contentKey = () => `${location.href}|${options.comments}|${options.images}`;
+    const contentKey = () => `${location.href}|${options.comments}|${options.topLevelOnly}|${options.images}`;
     MDC.loadOptions().then((o) => {
       options = o;
       for (const b of boxes) b.checked = !!options[b.name];

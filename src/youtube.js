@@ -191,7 +191,7 @@
           out.push(c);
           state.count++;
           const rt = findToken(t.replies);
-          if (rt) replyJobs.push(async () => (c.replies = await loadList(api, rt, state)));
+          if (rt && !state.opts?.topLevelOnly) replyJobs.push(async () => (c.replies = await loadList(api, rt, state)));
         } else if (it.commentViewModel || it.commentRenderer) {
           const c = toComment(it, parsed);
           if (c) {
@@ -259,7 +259,7 @@
     lines.push("", "## Description", "", (v.shortDescription || "(no description)").replace(/\n/g, "  \n"), "");
     if (!commentsDisabled && opts.comments) {
       const total = state.count.toLocaleString("en-US");
-      lines.push(`## Comments (${total} copied, including replies; sorted by Top)`, "");
+      lines.push(`## Comments (${total} copied, ${opts.topLevelOnly ? "top-level only" : "including replies"}; sorted by Top)`, "");
       if (state.signal.aborted) lines.push("> Note: stopped early — this is a partial list of comments.", "");
       lines.push(comments.map((c) => renderComment(c, 0)).join("").trimEnd());
     }

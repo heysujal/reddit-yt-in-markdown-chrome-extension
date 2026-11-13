@@ -15,10 +15,11 @@
   const emptyListing = () => ({ kind: "Listing", data: { children: [] } });
 
   // Finds every "more" node in the tree along with the array that holds it.
-  function collectMores(list, out) {
+  // With topLevelOnly, only the root list is searched, so replies are never expanded.
+  function collectMores(list, out, topLevelOnly = false) {
     for (const node of list) {
       if (node.kind === "more") out.push({ list, node });
-      else if (node.kind === "t1" && node.data.replies) collectMores(node.data.replies.data.children, out);
+      else if (!topLevelOnly && node.kind === "t1" && node.data.replies) collectMores(node.data.replies.data.children, out);
     }
     return out;
   }
@@ -35,7 +36,7 @@
     let loaded = 0;
     while (!signal.aborted) {
       await MDC.breathe(opts);
-      const mores = collectMores(rootList, []);
+      const mores = collectMores(rootList, [], opts?.topLevelOnly);
       if (!mores.length) return { complete: true };
       if (requests >= MAX_REQUESTS) return { complete: false };
       const { list, node } = mores[0];
@@ -103,7 +104,7 @@
     return out;
   }
 
-  function renderComment(c, depth, counter) {
+  function renderComment(c, depth, counter, topLevelOnly = false) {
     if (c.kind !== "t1") return "";
     const d = c.data;
     counter.n++;
@@ -119,6 +120,7 @@
       .filter(Boolean)
       .join(" · ");
     let md = `${pad}- ${meta}\n\n${MDC.indent(d.body, pad + "  ")}\n\n`;
+    if (topLevelOnly) return md;
     for (const r of d.replies?.data?.children || []) md += renderComment(r, depth + 1, counter);
     return md;
   }
@@ -148,8 +150,8 @@
     if (!opts.comments) return lines.join("\n").trimEnd() + "\n";
 
     const counter = { n: 0 };
-    const commentsMd = comments.map((c) => renderComment(c, 0, counter)).join("");
-    lines.push("---", "", `## Comments (${counter.n} copied)`, "");
+    const commentsMd = comments.map((c) => renderComment(c, 0, counter, opts.topLevelOnly)).join("");
+    lines.push("---", "", `## Comments (${counter.n} copied${opts.topLevelOnly ? ", top-level only" : ""})`, "");
     if (!complete) lines.push("> Note: some deeply nested or collapsed comments were not loaded.", "");
     return lines.join("\n") + "\n" + commentsMd.trimEnd() + "\n";
   }
@@ -158,7 +160,9 @@
     const postId = location.pathname.match(POST_RE)[1];
     const origin = location.origin;
     progress("Fetching post…");
-    const [listing, commentListing] = await getJson(`${origin}/comments/${postId}.json?limit=500&raw_json=1`, signal);
+    // Top-level only: depth=1 asks Reddit to leave nested replies out of the response.
+    const depth = opts.topLevelOnly ? "&depth=1" : "";
+    const [listing, commentListing] = await getJson(`${origin}/comments/${postId}.json?limit=500&raw_json=1${depth}`, signal);
     const post = listing.data.children[0].data;
     const comments = commentListing.data.children;
     const { complete } = opts.comments ? await expandMore(comments, postId, origin, progress, signal, opts) : { complete: true };
