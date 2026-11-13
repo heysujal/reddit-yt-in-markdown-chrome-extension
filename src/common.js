@@ -90,11 +90,11 @@
   const COPY_ICON =
     '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>';
   const DOWNLOAD_ICON =
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 15v3H6v-3H4v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3h-2zm-1-4-1.4-1.4-2.6 2.6V4h-2v8.2L8.4 9.6 7 11l5 5 5-5z"/></svg>';
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 15v3H6v-3H4v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3h-2zm-1-4-1.4-1.4-2.6 2.6V4h-2v8.2L8.4 9.6 7 11l5 5 5-5z"/></svg>';
   const MORE_ICON =
     '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
 
-  // Mounts a floating "Copy Markdown" button (plus a ⋯ menu with options and Download) that is
+  // Mounts a floating "Copy Markdown" button (plus Download and a ⋯ options menu) that is
   // shown only while isActive(location) is true.
   // build(progress, signal, options) must resolve to the markdown string. Clicking while busy
   // aborts the fetch, and build() should then return whatever it has collected so far.
@@ -133,17 +133,17 @@
         label { display: flex; align-items: center; gap: 10px; padding: 8px 6px; border-radius: 8px; cursor: pointer; }
         label:hover { background: #f0f3f6; }
         input { width: 16px; height: 16px; margin: 0; accent-color: #0d7c86; cursor: pointer; }
-        .dl { justify-content: center; margin-top: 4px; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
+        .dl { padding: 14px 13px; border-left: 1px solid rgba(255,255,255,.3); }
         svg { flex: none; }
       </style>
       <div class="wrap">
         <div class="panel" role="menu">
           <label><input type="checkbox" name="comments" /> Include comments</label>
           <label><input type="checkbox" name="images" /> Include images</label>
-          <button type="button" class="dl">${DOWNLOAD_ICON}<span>Download .md</span></button>
         </div>
         <div class="row" data-state="idle">
           <button type="button" class="main" title="Copy this page as Markdown">${COPY_ICON}<span></span></button>
+          <button type="button" class="dl" title="Download as a .md file" aria-label="Download Markdown file">${DOWNLOAD_ICON}</button>
           <button type="button" class="more" title="Options" aria-label="Options" aria-haspopup="true" aria-expanded="false">${MORE_ICON}</button>
         </div>
       </div>`;

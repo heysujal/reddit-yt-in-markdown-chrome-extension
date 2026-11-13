@@ -20,9 +20,8 @@ Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No AP
 
 **Both**
 - A floating **Copy Markdown** button in the bottom-right corner
-- A **⋯** menu with:
-  - **Download .md**, which saves the page as a file named after its title
-  - **Include comments** and **Include images** toggles, remembered between visits
+- A **⬇ Download** button next to it that saves the Markdown as a `.md` file named after the post or video title
+- A **⋯** menu with **Include comments** and **Include images** toggles, remembered between visits
 - Live progress on large threads
 - Click again while it is loading to stop early and keep what has loaded so far
 
@@ -40,7 +39,7 @@ It also works in Chromium-based browsers such as Edge, Brave, and Arc.
 ## Usage
 
 1. Open a Reddit post or a YouTube video.
-2. Click **Copy Markdown** in the bottom-right corner, or open **⋯** and click **Download .md**.
+2. Click **Copy Markdown** to copy it, or **⬇** to download it as a `.md` file.
 3. Wait for the "Copied ✓" or "Downloaded ✓" confirmation.
 
 ## Example output
