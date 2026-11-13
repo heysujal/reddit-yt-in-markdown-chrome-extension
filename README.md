@@ -2,7 +2,7 @@
 
 # Copy as Markdown: Reddit + YouTube
 
-A Chrome extension that turns a Reddit thread or a YouTube video into clean Markdown with one click. It includes the post or video, its metadata, and every comment and reply. Copy it to the clipboard or download it as a `.md` file.
+A Chrome extension that turns a Reddit thread, a YouTube video or a YouTube Short into clean Markdown with one click. It includes the post or video, its metadata, and every comment and reply. Copy it to the clipboard or download it as a `.md` file.
 
 Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No API key, account, or server is needed.
 
@@ -14,7 +14,7 @@ Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No AP
 - The full comment tree, with author, score, and date on every comment, plus OP, pinned, and edited markers
 - Expands "load more" and "continue this thread" branches automatically
 
-**YouTube** (`youtube.com/watch?v=*`)
+**YouTube** (`youtube.com/watch?v=*` and Shorts at `youtube.com/shorts/*`)
 - Title, channel, subscribers, publish date, duration, views, likes, category, tags, description, and thumbnail
 - Every comment with all its replies, likes, and age, plus pinned and creator-heart markers
 
@@ -40,7 +40,7 @@ It also works in Chromium-based browsers such as Edge, Brave, and Arc.
 
 ## Usage
 
-1. Open a Reddit post or a YouTube video.
+1. Open a Reddit post, a YouTube video or a YouTube Short.
 2. Click **Copy Markdown** to copy it, or **Download .md** to save it as a file. If the green dot is showing, the result is already prepared and arrives instantly.
 3. Wait for the "Copied ✓" or "Downloaded ✓" confirmation.
 
@@ -82,6 +82,7 @@ The extension makes the same requests the site would make if you clicked every "
 - **Reddit may rate-limit you.** Reddit doesn't publish a limit for logged-in browsing, and big threads send many requests in a row, up to 400 per post. If you copy several very large threads back to back, Reddit may start answering with `429 Too Many Requests` for a while. That can also affect your normal browsing on Reddit until it resets.
 - **Prepare in background adds to this.** With it on, every post or video you open is fetched in full, even if you never copy it. If you browse many large threads, or Reddit starts refusing requests, turn it off in the **⋯** menu.
 - **YouTube** is more tolerant, but a video with tens of thousands of comments still takes hundreds of requests to its comments API.
+- **Shorts and Prepare in background:** each Short you swipe to (and stay on for about 1.5 seconds) starts its own background fetch. Swiping away cancels it, but scrolling through many Shorts still adds up. Turn the option off if you binge Shorts.
 - **There is no retry or back-off yet.** On Reddit, a failed request (including a 429) is skipped, so those comments are silently missing from the output. On YouTube, a failed comments request stops the run with an error.
 - **The output may be incomplete.** If Reddit's 400-request cap is reached, or you stop a run early, the output says so in a note at the top of the comments.
 
@@ -98,7 +99,7 @@ The extension makes the same requests the site would make if you clicked every "
 - **Unofficial endpoints.** Both sites' internal endpoints and page data are undocumented and can change without notice. If a site changes them, copying may fail or miss fields until the extension is updated.
 - **Clipboard timing.** If you click **Copy Markdown** and the fetch takes a long time, Chrome may refuse the clipboard write. The button then says "Ready — click again to copy", and one more click copies it. **Download .md** isn't affected.
 - **Chromium only.** The extension is built for Chrome and Chromium-based browsers. It has not been tested in Firefox or Safari.
-- **Supported pages:** Reddit post pages (`/r/<sub>/comments/<id>/…`) and YouTube watch pages (`/watch?v=…`). Shorts, live chat, community posts, and subreddit or channel listings aren't supported.
+- **Supported pages:** Reddit post pages (`/r/<sub>/comments/<id>/…`) YouTube videos (`/watch?v=…`) and Shorts (`/shorts/<id>`). Live chat, community posts, and subreddit or channel listings aren't supported.
 
 ## Privacy
 
@@ -116,7 +117,7 @@ The extension makes the same requests the site would make if you clicked every "
 └── src/
     ├── common.js     # Floating button, options menu, clipboard, download, helpers
     ├── reddit.js     # Reddit thread → Markdown
-    └── youtube.js    # YouTube video + comments → Markdown
+    └── youtube.js    # YouTube video or Short + comments → Markdown
 ```
 
 ## Development

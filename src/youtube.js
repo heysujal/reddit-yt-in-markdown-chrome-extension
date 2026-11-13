@@ -1,10 +1,15 @@
-// YouTube: reads the watch page's embedded data, then pages through YouTube's own comments API
+// YouTube (videos and Shorts): reads the watch page's embedded data, then pages through YouTube's own comments API
 // (the same one youtube.com uses) to collect every comment thread and all of its replies.
 (() => {
   const MDC = globalThis.MDC;
   const REPLY_CONCURRENCY = 6;
 
-  const videoIdOf = (loc) => (loc.pathname === "/watch" ? new URLSearchParams(loc.search).get("v") : null);
+  // Regular videos live at /watch?v=<id>, Shorts at /shorts/<id>. Both load through the same
+  // watch-page data and comments API, so only the id lookup and the output URL differ.
+  const SHORTS_RE = /^\/shorts\/([\w-]{11})/;
+  const isShort = (loc) => SHORTS_RE.test(loc.pathname);
+  const videoIdOf = (loc) =>
+    loc.pathname === "/watch" ? new URLSearchParams(loc.search).get("v") : loc.pathname.match(SHORTS_RE)?.[1] || null;
   const isActive = (loc) => !!videoIdOf(loc);
 
   // ---------- generic helpers ----------
@@ -233,7 +238,7 @@
     return aria?.match(/\d[\d,.\s]*[KMBkmb]?/)?.[0].trim() || "unknown";
   }
 
-  function render({ data, player }, comments, state, commentsDisabled, opts = MDC.DEFAULT_OPTIONS) {
+  function render({ data, player, short }, comments, state, commentsDisabled, opts = MDC.DEFAULT_OPTIONS) {
     const v = player.videoDetails || {};
     const mf = player.microformat?.playerMicroformatRenderer || {};
     const subs = txt(findAll(data, "subscriberCountText")[0]);
@@ -241,7 +246,7 @@
       `# ${v.title || txt(findAll(data, "title")[0])}`,
       "",
       `- **Channel:** [${v.author}](https://www.youtube.com/channel/${v.channelId})${subs ? ` (${subs})` : ""}`,
-      `- **URL:** https://www.youtube.com/watch?v=${v.videoId}`,
+      short ? `- **URL:** https://www.youtube.com/shorts/${v.videoId} (Short)` : `- **URL:** https://www.youtube.com/watch?v=${v.videoId}`,
       `- **Published:** ${mf.publishDate || mf.uploadDate || "unknown"}`,
       `- **Duration:** ${v.isLiveContent && v.lengthSeconds === "0" ? "live" : fmtDuration(v.lengthSeconds)}`,
       `- **Views:** ${MDC.fmtNum(v.viewCount)}`,
@@ -264,7 +269,7 @@
   async function build(progress, signal, opts = MDC.DEFAULT_OPTIONS) {
     const videoId = videoIdOf(location);
     progress("Loading video…");
-    const page = await loadPage(videoId, signal);
+    const page = { ...(await loadPage(videoId, signal)), short: isShort(location) };
     const section = findAll(page.data, "itemSectionRenderer").find((s) => s.sectionIdentifier === "comment-item-section");
     const token = findToken(section);
     const state = { count: 0, headerCount: "", progress, signal, opts };
