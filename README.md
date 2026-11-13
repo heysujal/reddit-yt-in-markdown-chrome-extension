@@ -30,7 +30,7 @@ Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No AP
 
 The extension is not on the Chrome Web Store yet. To install it from this repo:
 
-1. Download it: **Code → Download ZIP** on GitHub, then unzip it. You can also run `git clone https://github.com/heysujal/reddit-yt-in-markdown.git`.
+1. Download it: **Code → Download ZIP** on GitHub, then unzip it. You can also run `git clone https://github.com/heysujal/reddit-yt-in-markdown-chrome-extension.git`.
 2. Open `chrome://extensions` and turn on **Developer mode** (top right).
 3. Click **Load unpacked** and select the unzipped folder (the one that contains `manifest.json`).
 4. Reload any Reddit or YouTube tab that was already open.

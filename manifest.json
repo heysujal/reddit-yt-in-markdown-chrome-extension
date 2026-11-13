@@ -3,7 +3,7 @@
   "name": "Copy as Markdown (Reddit + YouTube)",
   "version": "1.1.0",
   "description": "Copy or download any Reddit thread or YouTube video, with metadata and every comment and reply, as clean Markdown.",
-  "homepage_url": "https://github.com/heysujal/reddit-yt-in-markdown",
+  "homepage_url": "https://github.com/heysujal/reddit-yt-in-markdown-chrome-extension",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
