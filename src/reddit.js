@@ -30,10 +30,11 @@
     list.splice(list.indexOf(node), 1, ...fresh);
   }
 
-  async function expandMore(rootList, postId, origin, progress, signal) {
+  async function expandMore(rootList, postId, origin, progress, signal, opts) {
     let requests = 0;
     let loaded = 0;
     while (!signal.aborted) {
+      await MDC.breathe(opts);
       const mores = collectMores(rootList, []);
       if (!mores.length) return { complete: true };
       if (requests >= MAX_REQUESTS) return { complete: false };
@@ -160,7 +161,7 @@
     const [listing, commentListing] = await getJson(`${origin}/comments/${postId}.json?limit=500&raw_json=1`, signal);
     const post = listing.data.children[0].data;
     const comments = commentListing.data.children;
-    const { complete } = opts.comments ? await expandMore(comments, postId, origin, progress, signal) : { complete: true };
+    const { complete } = opts.comments ? await expandMore(comments, postId, origin, progress, signal, opts) : { complete: true };
     return render(post, comments, complete, opts);
   }
 

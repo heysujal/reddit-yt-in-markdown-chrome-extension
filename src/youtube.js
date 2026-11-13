@@ -165,6 +165,7 @@
   async function loadList(api, token, state) {
     const out = [];
     while (token && !state.signal.aborted) {
+      await MDC.breathe(state.opts);
       let json;
       try {
         json = await api(token, state.signal);
@@ -197,7 +198,8 @@
         }
       }
       state.progress(`Loading comments… ${state.count.toLocaleString("en-US")}`);
-      await MDC.pool(replyJobs, REPLY_CONCURRENCY);
+      // Fewer parallel requests while preparing in the background.
+      await MDC.pool(replyJobs, state.opts?.background ? 2 : REPLY_CONCURRENCY);
     }
     return out;
   }
@@ -265,7 +267,7 @@
     const page = await loadPage(videoId, signal);
     const section = findAll(page.data, "itemSectionRenderer").find((s) => s.sectionIdentifier === "comment-item-section");
     const token = findToken(section);
-    const state = { count: 0, headerCount: "", progress, signal };
+    const state = { count: 0, headerCount: "", progress, signal, opts };
     const comments = token && opts.comments ? await loadList(makeApi(page.cfg), token, state) : [];
     return render(page, comments, state, !token, opts);
   }

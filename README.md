@@ -19,9 +19,11 @@ Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No AP
 - Every comment with all its replies, likes, and age, plus pinned and creator-heart markers
 
 **Both**
-- A floating **Copy Markdown** button in the bottom-right corner
-- A **⬇ Download** button next to it that saves the Markdown as a `.md` file named after the post or video title
-- A **⋯** menu with **Include comments** and **Include images** toggles, remembered between visits
+- Two floating buttons in the bottom-right corner:
+  - **Download .md** saves the Markdown as a file named after the post or video title
+  - **Copy Markdown** copies it to the clipboard
+- **Prepare in background** (on by default): fetches everything quietly once the page loads, so Copy and Download are instant. Nothing is saved to your Downloads folder until you click. A green dot on the buttons means the result is ready. The prefetch runs only in visible tabs, waits for idle time between requests, and uses fewer parallel requests, so the page stays responsive.
+- A **⋯** menu with the **Prepare in background**, **Include comments** and **Include images** toggles, remembered between visits
 - Live progress on large threads
 - Click again while it is loading to stop early and keep what has loaded so far
 
@@ -39,7 +41,7 @@ It also works in Chromium-based browsers such as Edge, Brave, and Arc.
 ## Usage
 
 1. Open a Reddit post or a YouTube video.
-2. Click **Copy Markdown** to copy it, or **⬇** to download it as a `.md` file.
+2. Click **Copy Markdown** to copy it, or **Download .md** to save it as a file. If the green dot is showing, the result is already prepared and arrives instantly.
 3. Wait for the "Copied ✓" or "Downloaded ✓" confirmation.
 
 ## Example output
