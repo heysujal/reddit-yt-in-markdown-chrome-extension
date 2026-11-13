@@ -81,7 +81,7 @@
         console.warn("[Copy Markdown] could not expand comments", e);
         list.splice(list.indexOf(node), 1);
       }
-      progress(`Loading more comments… +${loaded}`);
+      progress(`Loading comments… +${loaded.toLocaleString("en-US")}`);
     }
     return { complete: false };
   }

@@ -6,6 +6,8 @@ A Chrome extension that turns a Reddit thread, a YouTube video or a YouTube Shor
 
 Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No API key, account, or server is needed.
 
+<p align="center"><img src="docs/screenshots/buttons.png" width="620" alt="The Download .md and Copy Markdown buttons floating in the bottom-right corner of a page" /></p>
+
 ## Features
 
 **Reddit** (`reddit.com/r/*/comments/*`)
@@ -26,6 +28,20 @@ Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No AP
 - A **⋯** menu with the **Prepare in background**, **Include comments** and **Include images** toggles, remembered between visits
 - Live progress on large threads
 - Click again while it is loading to stop early and keep what has loaded so far
+
+### Screenshots
+
+| Fetching a large thread | Done |
+|---|---|
+| <img src="docs/screenshots/loading.png" alt="Copy button in purple showing 'Loading comments… +1,240 (click to stop)'" /> | <img src="docs/screenshots/copied.png" alt="Copy button in green showing 'Copied ✓ (184.2 KB)'" /> |
+| Live progress. Click again to stop and keep what has loaded. | Shows the size of what was copied or downloaded. |
+
+| Options menu, with the result prepared in the background |
+|---|
+| <img src="docs/screenshots/prepared.png" width="620" alt="The ⋯ menu open with Include comments, Include images and Prepare in background ticked, and green ready dots on both buttons" /> |
+| The green dots mean the result is ready, so Copy and Download are instant. |
+
+*The screenshots show the extension's real buttons on a placeholder page.*
 
 ## Install
 
@@ -114,6 +130,7 @@ The extension makes the same requests the site would make if you clicked every "
 ```
 ├── manifest.json     # Manifest V3 config and content-script matches
 ├── icons/            # Extension icons (SVG masters + PNG sizes)
+├── docs/screenshots/ # Images used in this README
 └── src/
     ├── common.js     # Floating button, options menu, clipboard, download, helpers
     ├── reddit.js     # Reddit thread → Markdown

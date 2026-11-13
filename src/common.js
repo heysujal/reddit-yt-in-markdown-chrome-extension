@@ -121,7 +121,7 @@
         :host { all: initial; }
         .wrap {
           position: fixed; right: 24px; bottom: 24px; z-index: 2147483647;
-          display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: 270px;
+          display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: max-content; min-width: 270px; max-width: min(440px, calc(100vw - 48px));
           font: 600 15px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         }
         .row { display: flex; border-radius: 999px; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
@@ -151,7 +151,7 @@
         @keyframes pulse { 50% { opacity: .35; } }
         @media (prefers-reduced-motion: reduce) { .dot { animation: none !important; } }
         .panel {
-          display: none; flex-direction: column; gap: 2px; padding: 10px;
+          display: none; flex-direction: column; gap: 2px; padding: 10px; width: 270px; box-sizing: border-box; align-self: flex-end;
           color: #1f2328; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.3);
           font-weight: 500; font-size: 14px;
         }
