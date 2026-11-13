@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Copy as Markdown (Reddit + YouTube)",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Copy or download any Reddit thread, YouTube video or Short, with metadata and every comment and reply, as clean Markdown.",
   "homepage_url": "https://github.com/heysujal/reddit-yt-in-markdown-chrome-extension",
   "icons": {

@@ -43,7 +43,7 @@
 
   // ---------- options ----------
 
-  MDC.DEFAULT_OPTIONS = { comments: true, images: true, prepare: true };
+  MDC.DEFAULT_OPTIONS = { comments: true, images: true, prepare: false };
 
   MDC.loadOptions = async () => {
     try {
