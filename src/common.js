@@ -43,7 +43,7 @@
 
   // ---------- options ----------
 
-  MDC.DEFAULT_OPTIONS = { comments: true, topLevelOnly: false, images: true, prepare: false };
+  MDC.DEFAULT_OPTIONS = { comments: true, topLevelOnly: false, images: true, prepare: false, position: "bottom-right" };
 
   MDC.loadOptions = async () => {
     try {
@@ -124,6 +124,10 @@
           display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: max-content; min-width: 270px; max-width: min(440px, calc(100vw - 48px));
           font: 600 15px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         }
+        /* At the top, sit below the site's header bar and open the menu downwards. */
+        .wrap[data-pos^="top"] { top: 72px; bottom: auto; flex-direction: column-reverse; }
+        .wrap[data-pos$="left"] { left: 24px; right: auto; }
+        .wrap[data-pos$="left"] .panel { align-self: flex-start; }
         .row { display: flex; border-radius: 999px; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
         button {
           display: flex; align-items: center; gap: 8px; border: 0; cursor: pointer; min-width: 0;
@@ -160,6 +164,15 @@
         label:hover { background: #f0f3f6; }
         label small { display: block; margin-top: 2px; color: #59636e; font-weight: 400; font-size: 12px; }
         input { flex: none; width: 16px; height: 16px; margin: 1px 0 0; accent-color: #0d7c86; cursor: pointer; }
+        .pos { padding: 8px 6px 4px; }
+        .pos-title { display: block; margin-bottom: 6px; }
+        .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .seg label {
+          justify-content: center; padding: 6px; border: 1px solid #d0d7de; border-radius: 8px; font-size: 13px;
+        }
+        .seg label:has(input:checked) { color: #fff; background: #0d7c86; border-color: #0d7c86; }
+        .seg label:has(input:focus-visible) { outline: 3px solid #9be7ee; outline-offset: 1px; }
+        .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
         .status { padding: 6px 6px 2px; color: #59636e; font-size: 12px; font-weight: 400; }
         .status:empty { display: none; }
         svg { flex: none; }
@@ -172,6 +185,15 @@
           <label><input type="checkbox" name="images" /> Include images</label>
           <label><input type="checkbox" name="prepare" />
             <span>Prepare in background<small>Fetch everything when the page loads, so Copy and Download are instant.</small></span></label>
+          <div class="pos" role="radiogroup" aria-labelledby="mdc-pos-title">
+            <span class="pos-title" id="mdc-pos-title">Button position</span>
+            <div class="seg">
+              <label><input type="radio" name="position" value="top-left" /> Top left</label>
+              <label><input type="radio" name="position" value="top-right" /> Top right</label>
+              <label><input type="radio" name="position" value="bottom-left" /> Bottom left</label>
+              <label><input type="radio" name="position" value="bottom-right" /> Bottom right</label>
+            </div>
+          </div>
           <div class="status" aria-live="polite"></div>
         </div>
         <button type="button" class="action dl" data-state="idle" title="Download as a .md file">${DOWNLOAD_ICON}<span></span><i class="dot"></i></button>
@@ -185,7 +207,9 @@
     const moreBtn = $(".more");
     const status = $(".status");
     const dots = [...root.querySelectorAll(".dot")];
-    const boxes = [...panel.querySelectorAll("input")];
+    const wrap = $(".wrap");
+    const boxes = [...panel.querySelectorAll('input[type="checkbox"]')];
+    const radios = [...panel.querySelectorAll('input[name="position"]')];
     const buttons = {
       copy: { el: $(".copy"), label },
       download: { el: $(".dl"), label: "Download .md" },
@@ -197,8 +221,22 @@
     MDC.loadOptions().then((o) => {
       options = o;
       for (const b of boxes) b.checked = !!options[b.name];
+      applyPosition();
       schedulePrepare();
     });
+    const applyPosition = () => {
+      wrap.dataset.pos = options.position;
+      for (const r of radios) r.checked = r.value === options.position;
+    };
+    applyPosition();
+    for (const r of radios) {
+      r.addEventListener("change", () => {
+        if (!r.checked) return;
+        options = { ...options, position: r.value };
+        MDC.saveOptions(options);
+        applyPosition();
+      });
+    }
     for (const b of boxes) {
       b.checked = !!options[b.name];
       b.addEventListener("change", () => {
@@ -392,5 +430,14 @@
     setInterval(sync, 700);
     window.addEventListener("popstate", sync);
     document.addEventListener("yt-navigate-finish", sync);
+
+    // Stay out of the way while a video plays full screen.
+    const onFullscreen = () => {
+      const fs = document.fullscreenElement || document.webkitFullscreenElement;
+      host.style.display = fs ? "none" : "";
+      if (fs) setOpen(false);
+    };
+    document.addEventListener("fullscreenchange", onFullscreen);
+    document.addEventListener("webkitfullscreenchange", onFullscreen);
   };
 })();

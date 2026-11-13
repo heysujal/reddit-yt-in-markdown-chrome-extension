@@ -26,7 +26,7 @@ Paste the result into an LLM, your notes app, Obsidian, or a GitHub issue. No AP
   - **Copy Markdown** copies it to the clipboard
 - **Prepare in background** (off by default; turn it on in the **⋯** menu): fetches everything quietly once the page loads, so Copy and Download are instant. Nothing is saved to your Downloads folder until you click. A green dot on the buttons means the result is ready. The prefetch runs only in visible tabs, waits for idle time between requests, and uses fewer parallel requests, so the page stays responsive.
 - **Top-level comments only** (off by default; in the **⋯** menu): keeps the first level of comments and skips every reply and nested reply. On big threads this also means far fewer requests.
-- A **⋯** menu with the **Prepare in background**, **Include comments**, **Top-level comments only** and **Include images** toggles, remembered between visits
+- A **⋯** menu with the **Prepare in background**, **Include comments**, **Top-level comments only** and **Include images** toggles, plus a **Button position** picker (any corner of the page), all remembered between visits
 - Live progress on large threads
 - Click again while it is loading to stop early and keep what has loaded so far
 
